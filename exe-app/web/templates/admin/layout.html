@@ -1,0 +1,355 @@
+<!--https://www.webslesson.info/2020/10/how-to-make-editable-datatable-in-php-using-x-editable-plugin.html-->
+<html>
+	<head>
+		<title>In-Place Editing in DataTable with X-Editable using PHP Ajax</title>						
+		
+		<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet"/>				
+		<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" /> -->
+		<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css" />	
+		
+		
+
+		<!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>		
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>		
+		<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>		  				
+		<script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>		
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>				
+		
+
+
+		<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">		
+				
+		<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" />
+		
+	</head>
+	<body>
+		<div class="container">
+			<h3 style="text-align:center">In-Place Editing in DataTable with X-Editable using PHP Ajax</h3>
+			<br />			
+			<div class="panel panel-default">			
+				<div class="panel-heading">Sample Data</div>
+				<div class="panel-body">		
+					<div class="table-responsive">										
+						<table id="sample_data" class="table table-bordered table-striped">						
+						<!-- <button id="addRow">Add row</button>		 -->
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Position</th>
+									<th>Office</th>
+									<th>Extn.</th>
+									<th>Start date</th>
+									<th>Salary</th>
+									<th>Del.</th>									
+								</tr>
+								<tfoot>
+									<tr>
+										<th>Name</th>
+										<th>Position</th>
+										<th>Office</th>
+										<th>Extn.</th>
+										<th>Start date</th>
+										<th>Salary</th>
+										<th>Del.</th>										
+									</tr>
+								</tfoot>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<br />
+
+<script type="text/javascript" language="javascript">
+var tabidx = 1000
+$(document).ready(function(){
+	var dataTable = $('#sample_data').DataTable({
+		"lengthMenu": [5, 50, 100, 200, 300],
+		"order":[],
+		"ajax": 'http://127.0.0.1:5000/api/',
+		createdRow:function(row, data, rowIndex)
+		{$.each($('td', row), function(colIndex){
+				var tempidx = 0
+				if(colIndex == 0)
+				{
+					$(this).attr('data-name', 'name');
+					$(this).attr('class', 'name');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);		//data primary key
+					$(this).attr('tabindex', tabidx)
+					$(this).attr('autofocus', true)					
+				}
+				if(colIndex == 1)
+				{
+					$(this).attr('data-name', 'position');
+					$(this).attr('class', 'position');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 2)
+				{
+					$(this).attr('data-name', 'office');
+					$(this).attr('class', 'office');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 3)
+				{
+					$(this).attr('data-name', 'extn');
+					$(this).attr('class', 'extn');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 4)
+				{
+					$(this).attr('data-name', 'start_date');
+					$(this).attr('class', 'start_date');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 5)
+				{
+					$(this).attr('data-name', 'salary');
+					$(this).attr('class', 'salary');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				
+				// tabidx++
+			});
+		},
+		columnDefs: [			
+			{ targets: 6,
+				render: function (data, type, row, meta) {					
+					//return '<input type="button" class="btn btn-primary btn-sm edit" id=n-"' + meta.row + '" value="Edit"/><input type="button" class="btn btn-danger btn-sm delete" id=n-"' + meta.row + '" value="Del."/>';
+					return '<input type="button" class="btn btn-danger btn-sm delete" tabindex="-1" style="width:100%" id=n-"' + meta.row + '" value="X"/>';
+				},
+				"orderable": false,
+				"width": "5"
+		  	}
+		],
+		dom: 'Blfrtrip',//'Blfrtrip'
+		buttons: [
+			{
+				text: 'Reload',
+				className: 'btn btn-primary',
+				action: function ( e, dt, node, config ) {
+					dt.ajax.reload();
+				}			
+			},
+			{
+				text: 'Add New',
+				className: 'btn btn-success',
+				action: function( e, dt, node, config ) {
+					dt.row.add( [
+						'',
+						'',
+						'',
+						'',
+						'',
+						''
+					], dt.order([0, 'asc']) ).draw();
+				}				
+			}
+		],
+		keys: true,
+		
+	});
+	
+
+	$('#sample_data tbody').on('click', 'tr', function () {
+		// var data = dataTable.row( this ).data();
+		// $(this).toggleClass('selected');
+        // alert( 'You clicked on '+data[0]+'\'s row' );
+    } );
+	// dataTable.buttons().container()
+    //     .appendTo( '#sample_data .small-6.columns:eq(0)' );
+	// inline edit
+	$.fn.editable.defaults.mode = 'inline';
+	
+	// tab based edit tabindex using jquery
+	// $('#sample_data tbody').click(function(e){
+	// $('#sample_data tbody').focus();
+	// });
+	var currentNode;
+	$('#sample_data tbody').keypress(function(e){
+		// console.log(e.currentTarget.innerHTML);			
+		if (e.which == 13) {
+			currentNode = e.target;
+			// console.log((e.target))	
+			$(e.target).click();			
+		}
+		var tempd = e.target
+		var cn = e.target.className			
+		// e.preventDefault(); // Stop the default behaviour        		
+		// $(e.target).editable('toggle');			
+	});
+
+
+	// arrows key navigation
+	
+	// arrows key navigation
+
+	// $('#sample_data tbody').on('click', 'tr', function () {
+    //     var data = dataTable.row( this ).data();
+	// 	// alert( 'You clicked on '+data[0]+'\'s row' );		
+		
+	// } );
+	
+    // $('#addRow').on( 'click', function () {
+        // dataTable.row.add( [
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+		// 	'',			
+        // ] ).draw();
+	
+    // } );
+	// EXTRA OPTIONS ARE AVAILABLE
+	//http://vitalets.github.io/x-editable/assets/demo.js
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.name',		
+		url:'update.php',
+		title:'Name',
+		type:'POST',
+		validate:function(value){
+			if($.trim(value) == '')
+			{
+				return 'This field is required';
+			}
+		},
+		destroy: function() {
+			console.log("d")
+		}
+				
+	});
+	// no smint change to next step
+	
+
+	// on sumbmit change to next step
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.position',
+		url:'update.php',
+		pk: 0,
+		title:'Position',
+		type:'POST',
+		validate:function(value){
+			if($.trim(value) == '')
+			{
+				return 'This field is required';
+			}
+		}	
+	});
+	
+
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.office',
+		url:'update.php',
+		title:'Office',
+		type:'POST',
+		datatype:'json',
+		source:[{value: "Male", text: "Male"}, {value: "Female", text: "Female"}],
+		validate:function(value){
+			if($.trim(value) == '')
+			{
+				return 'This field is required';
+			}
+		}
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.extn',
+		url:'update.php',
+		title:'Extn',
+		type:'POST',
+		validate:function(value){
+			if($.trim(value) == '')
+			{
+				return 'This field is required';
+			}
+		}
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.start_date',
+		url:'update.php',
+		title:'Start Date',
+		type:'POST',
+		validate:function(value){
+			if($.trim(value) == '')
+			{
+				return 'This field is required';
+			}
+		}
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.salary',
+		url:'update.php',
+		title:'Salary',
+		type:'POST',		
+		validate:function(value){
+			if($.trim(value) == '')
+			{
+				return 'This field is required';
+			}
+		}
+	});	
+
+
+// Delete record
+// https://makitweb.com/edit-delete-datatables-record-with-ajax-and-php/
+$('#sample_data tbody').on('click', '.delete', function () {
+  //var id = $(this).attr("name").match(/\d+/)[0];
+  //var data = $('#sample_data').DataTable().row(id).data();
+  //console.log(data[0]);
+  var id = $(this).attr("id").match(/\d+/)[0];
+  var data = $('#sample_data').DataTable().row( id ).data();
+  console.log(data[0], id);
+  
+ 
+		
+  
+    //dataTable.row( $(this).parents('tr') ).remove().draw(true);
+	
+});
+
+	
+
+
+
+
+
+
+});	
+//https://www.youtube.com/watch?v=Xhl6UC3nsnE&ab_channel=Webslesson
+
+
+</script>
+
+
+</body>
+</html>

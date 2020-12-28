@@ -1,0 +1,273 @@
+th { white-space: nowrap; }
+
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 6px 10px !important;         
+}
+
+
+/* since datatable overrides bs*/
+.btn-success {
+    color: #fff !important;
+    background-color: #5cb85c !important;
+    border-color: #4cae4c !important;
+}
+
+.btn-primary {
+    color: #fff !important;
+    background-color: #337ab7 !important;
+    border-color: #2e6da4 !important;    
+}
+
+
+/* xedit hover edit */
+
+.btn-sm, .btn-group-sm > .btn {
+    margin: 1px !important;
+    padding: 1rem 1rem !important;
+    font-size: 14px !important;
+    line-height: 0 !important;
+    border-radius: 0.2rem !important;
+}
+.input-sm {
+    margin: 1px !important;
+    height: 36px !important;
+    padding: 0px 9px !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    border-radius: 0px !important;
+}
+
+
+/* pagination style */
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0 !important;
+
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding-top: 0 !important;
+}
+
+.pagination>li:first-child>a, .pagination>li:first-child>span {
+    margin-left: 0 !important;
+}
+
+.pagination>li>a, .pagination>li>span {    
+    margin-left: 0px;
+}
+
+/* number of list showing */
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: 0;
+}
+
+/* sorting icon */
+table.dataTable thead .sorting, .sorting_asc, .sorting_desc {
+    background-image: none !important;
+}
+
+    
+
+
+
+/* new table desing */
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 4px !important;
+    padding-right: 1px !important;
+    line-height: 1.5 !important;
+}
+
+table.dataTable>thead .sorting:before, table.dataTable>thead .sorting_asc:before, table.dataTable>thead .sorting_desc:before, table.dataTable>thead .sorting_asc_disabled:before, table.dataTable>thead .sorting_desc_disabled:before {
+    right: 0.4em !important;    
+}
+
+table.dataTable>thead .sorting:after, table.dataTable>thead .sorting_asc:after, table.dataTable>thead .sorting_desc:after, table.dataTable>thead .sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:after {
+    right: 0.4em;    
+}
+
+table.dataTable>thead .sorting:before, table.dataTable>thead .sorting:after, table.dataTable>thead .sorting_asc:before, table.dataTable>thead .sorting_asc:after, table.dataTable>thead .sorting_desc:before, table.dataTable>thead .sorting_desc:after, table.dataTable>thead .sorting_asc_disabled:before, table.dataTable>thead .sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:before, table.dataTable>thead .sorting_desc_disabled:after {
+    bottom: 0px !important;
+}
+.btn-sm, .btn-group-sm > .btn {
+    margin: 1px !important;
+    padding: 0.6rem 0.6rem !important;
+    font-size: 16px !important;
+    line-height: 0 !important;
+    border-radius: 0.2rem !important;
+    
+}
+
+.input-sm {
+    margin: 1px !important;
+    height: 30px !important;
+    padding: 0px 3px !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    border-radius: 0px !important;
+}
+
+.editable-buttons {
+    margin-left: 2px !important;
+}
+
+.table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+    border-bottom-width: px !important;
+}
+
+table.dataTable thead th, table.dataTable tfoot th {
+    font-weight: bold!important;
+    font-size: 12px !important;    
+}
+
+table.dataTable tbody {
+    font-size: 14px !important;
+} 
+
+
+/* delete button */
+.delete{
+    margin: 0px !important;
+    padding: 0 0 !important;
+    font-size: 16px !important;
+    /* line-height: 0 !important; */
+}
+
+table.dataTable thead, tfoot{
+    margin: 1px !important;
+}
+
+.highlight, table#sample_data.dataTable tbody tr:hover {
+    background-color: #ffa !important;
+    cursor: pointer !important;
+  }
+   
+.highlight, table#sample_data.dataTable tbody tr:hover > .sorting_1 {
+    background-color:#ffa !important;
+    cursor: pointer !important;
+    
+  }
+
+table.dataTable>thead .sorting:after, table.dataTable>thead .sorting_asc:after, table.dataTable>thead .sorting_desc:after, table.dataTable>thead .sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:after {
+    font-size: large !important;
+}
+
+table.dataTable>thead .sorting:before, table.dataTable>thead .sorting_asc:before, table.dataTable>thead .sorting_desc:before, table.dataTable>thead .sorting_asc_disabled:before, table.dataTable>thead .sorting_desc_disabled:before {
+    font-size: large !important;
+}
+
+a:hover {
+    cursor: pointer !important;
+}
+
+
+table.dataTable>thead .sorting:after, table.dataTable>thead .sorting_asc:after, table.dataTable>thead .sorting_desc:after, table.dataTable>thead .sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:after {
+    right: 0.2em !important;
+    content: "\25BC" !important;
+}
+
+.sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:after {
+    right: 0.2em !important;
+    content: "\25BC" !important;
+}
+
+table.dataTable>thead .sorting:before, table.dataTable>thead .sorting_asc:before, table.dataTable>thead .sorting_desc:before, table.dataTable>thead .sorting_asc_disabled:before, table.dataTable>thead .sorting_desc_disabled:before {
+    right: 0.2em !important;
+    content: "\25B2" !important;
+    
+}
+
+.sorting_asc_disabled:before, table.dataTable>thead .sorting_desc_disabled:before {
+    right: 0.2em !important;
+    content: "\25B2" !important;
+
+}
+
+/* table.dataTable>thead .sorting:before, table.dataTable>thead .sorting:after, table.dataTable>thead .sorting_asc:before, table.dataTable>thead .sorting_asc:after, table.dataTable>thead .sorting_desc:before, table.dataTable>thead .sorting_desc:after, table.dataTable>thead .sorting_asc_disabled:before, table.dataTable>thead .sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:before, table.dataTable>thead .sorting_desc_disabled:after {
+    position: absolute !important;
+    bottom: 0.9em !important;
+    display: block !important;
+    opacity: 0px !important;
+} */
+
+
+/* column visibility */
+.btn-outline-info {
+    color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+}
+
+div.dt-button-collection button.dt-button, div.dt-button-collection div.dt-button, div.dt-button-collection a.dt-button {
+    margin-bottom: 1px !important;    
+    background-color: #9c27b040 !important;
+    font-weight: bold;
+    color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+    margin-top: 0px !important;
+    
+}
+div.dt-button-collection {
+    padding: 2px;
+}
+div.dt-button-collection a {
+    color: #000000;
+}
+div.dt-button-background {    
+    width: none !important;
+    height: none !important;
+    
+    z-index: 1 !important;
+}
+
+div.dt-button-background {
+    position: fixed !important;
+    width: auto !important;
+    height: auto !important;    
+}
+
+/* search box filter after message box */
+.toolbar {
+    /* background-color: gray !important; */
+    /* line-height: 2.5 !important;
+    padding-left: 31px !important;     */
+    position: fixed !important;
+    width: 25% !important;
+    text-align: center !important;
+    margin-left: 33% !important;
+}
+.toolbar b {
+    margin-left: 1em;
+}
+
+.pagination>li>a, .pagination>li>span {    
+    padding: 4px 8px !important;
+    margin-left: 0px !important;
+    line-height: 1 !important;
+}
+
+
+table.dataTable {    
+    margin-top: 3px !important;
+    margin-bottom: 0px !important;    
+}
+
+label {    
+    margin-bottom: 0px !important;
+}
+
+.fade {
+    opacity: 1 !important;
+}
+
+.toolbar #res {
+    padding: 6px !important;
+    margin-bottom: 0px !important;
+    border: 1px solid transparent !important;
+    border-radius: 4px !important;
+}
+
+.alert-dismissable .close, .alert-dismissible .close {    
+    top: 0px !important;
+    right: 0px !important;    
+}

@@ -1,0 +1,832 @@
+<!--https://www.webslesson.info/2020/10/how-to-make-editable-datatable-in-php-using-x-editable-plugin.html-->
+<html>
+	<head>
+		<title>Data edit</title>						
+		
+		<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet"/>				
+		<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" /> -->
+		<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css" />	
+		
+		
+
+		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>		
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>		
+		<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>		  				
+		<script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>					
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>				
+		
+		<!-- <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script> -->
+		<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.colVis.min.js"></script>
+
+
+		<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">		
+				
+		<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" />
+		
+	</head>
+	<body>
+		<div class="container-fluid">
+			<h3 style="text-align:center">Data edit</h3>
+			<br />			
+			<div class="panel panel-default">			
+				<div class="panel-heading">Sample Data</div>
+				<div class="panel-body">		
+					<div class="table-responsive">
+						<!-- <a href="#" class="btn add_data">Add row</a>		 -->
+						<!-- <div>
+							Toggle column: 							
+							<a class="toggle-vis" data-column="1">Book</a>
+							- <a class="toggle-vis" data-column="2">Col 1</a>
+							- <a class="toggle-vis" data-column="3">Col 2</a> 
+							- <a class="toggle-vis" data-column="4">Author</a> 
+							- <a class="toggle-vis" data-column="5">Worked on</a> 
+							- <a class="toggle-vis" data-column="6">Lib</a>
+							- <a class="toggle-vis" data-column="7">Cap</a>
+							- <a class="toggle-vis" data-column="8">Par</a> 
+							- <a class="toggle-vis" data-column="9">Pag</a> 
+							- <a class="toggle-vis" data-column="10">Lin</a> 
+							- <a class="toggle-vis" data-column="11">Genre</a>
+							- <a class="toggle-vis" data-column="12">Origin Place</a>
+							- <a class="toggle-vis" data-column="13">Origin Time</a>
+							- <a class="toggle-vis" data-column="14">Del</a>
+							- <a class="show_all">Show All</a>
+						</div>											 -->						
+						<table id="sample_data" class="table table-bordered table-striped row-border hover order-column display" style="min-width: 864px;">						
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Book</th>
+									<th>Col 1</th>
+									<th>Col 2</th>
+									<th>Author</th>
+									<th>Worked on</th>
+									<th>Lib.</th>
+                                    <th>Cap.</th>
+                                    <th>Par.</th>
+                                    <th>Pag.</th>
+                                    <th>Line</th>
+                                    <th>Genre.</th>
+                                    <th>Origin Place</th>
+                                    <th>Origin Time</th>
+                                    <th></th>
+								</tr>
+								<tfoot>
+									<tr>
+										<th>Id</th>
+										<th>Book</th>
+                                        <th>Col 1</th>
+                                        <th>Col 2</th>
+                                        <th>Author</th>
+                                        <th>Work on</th>
+                                        <th>Lib.</th>
+                                        <th>Cap.</th>
+                                        <th>Par.</th>
+                                        <th>Pag.</th>
+                                        <th>Line</th>
+                                        <th>Genre.</th>
+                                        <th>Origin Place</th>
+                                        <th>Origin Time</th>
+                                        <th></th>									
+									</tr>
+								</tfoot>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<br />
+
+<script type="text/javascript" language="javascript">
+var tabidx = 1000
+var newEntry = false
+var addTimes = 0
+
+$(document).ready(function(){
+	var dataTable = $('#sample_data').DataTable({
+		responsive: true,
+		"lengthMenu": [[5, 25, 100, -1], [5, 25, 100, "All"]],
+		"order":[],		
+		"Processing" : true,
+		"Paginate" : true,
+		"serverSide" : true,
+		"LenthChange" : true,
+		"pageLength": 5,
+		"pagingType": "full_numbers",
+		"paging": true,
+		"ajax":{
+			url: "http://127.0.0.1:5000/api/",
+			type: "GET",
+			"data": function ( d ) {
+				d.new_entry = newEntry
+				d.add_times = addTimes
+                // d.custom = $('#myInput').val();
+                // etc
+            }
+		},
+		// "iDisplayLength": 5,		
+		// "fnRowCallback" : function(nRow, aData,
+        //                         iDisplayIndex) {
+        //                     $("td:first", nRow).html(iDisplayIndex + 1);
+        //                     return nRow;
+        //                 },		
+		createdRow:function(row, data, rowIndex){
+            $.each($('td', row), function(colIndex){				
+				if(colIndex == 0)
+				{
+					$(this).attr('data-name', 'book');
+					$(this).attr('class', 'book');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);		//data primary key
+					$(this).attr('tabindex', tabidx)
+					$(this).attr('autofocus', true)					
+				}
+				if(colIndex == 1)
+				{
+					$(this).attr('data-name', 'col_1');
+					$(this).attr('class', 'col_1');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 2)
+				{
+					$(this).attr('data-name', 'col_2');
+					$(this).attr('class', 'col_2');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 3)
+				{
+					$(this).attr('data-name', 'author');
+					$(this).attr('class', 'author');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 4)
+				{
+					$(this).attr('data-name', 'work');
+					$(this).attr('class', 'worked_on');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 5)
+				{
+					$(this).attr('data-name', 'lib');
+					$(this).attr('class', 'lib');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+                }
+                if(colIndex == 6)
+				{
+					$(this).attr('data-name', 'cap');
+					$(this).attr('class', 'cap');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+                }
+                if(colIndex == 7)
+				{
+					$(this).attr('data-name', 'par');
+					$(this).attr('class', 'par');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+                }
+                if(colIndex == 8)
+				{
+					$(this).attr('data-name', 'pag');
+					$(this).attr('class', 'pag');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 9)
+				{
+					$(this).attr('data-name', 'line');
+					$(this).attr('class', 'line');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+				}
+				if(colIndex == 10)
+				{
+					$(this).attr('data-name', 'genre');
+					$(this).attr('class', 'genre');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+                }
+                if(colIndex == 11)
+				{
+					$(this).attr('data-name', 'origin_place');
+					$(this).attr('class', 'origin_place');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+                }
+                if(colIndex == 12)
+				{
+					$(this).attr('data-name', 'origin_time');
+					$(this).attr('class', 'origin_time sorting_disabled');
+					$(this).attr('data-type', 'text');
+					$(this).attr('data-pk', data[0]);
+					$(this).attr('tabindex', tabidx)
+                }
+				// tabidx++
+			});
+		},
+        // "ordering": false,
+        columnDefs: [			
+			{ targets: 14,
+				'render': function (data, type, row, meta) {					
+					//return '<input type="button" class="btn btn-primary btn-sm edit" id=n-"' + meta.row + '" value="Edit"/><input type="button" class="btn btn-danger btn-sm delete" id=n-"' + meta.row + '" value="Del."/>';
+					return '<a class="btn delete" tabindex="-1" style="width:100% padding:0, margin:0" id=n-"' +
+					 meta.row + '"> <span class="glyphicon glyphicon-trash text-danger"></span> </a>';
+					// return '<input type="checkbox" class="delete" tabindex="-1" style="width:100%" id=n-"' + meta.row + '"/>';
+					
+				},
+				"orderable": true,
+				"width": "2%"
+			  },              
+			{ "orderable": false, "targets": 0, "visible": false},			
+			{ "orderable": true, "targets": 1},			
+            { "orderable": false, "targets": 2 },
+            { "orderable": false, "targets": 3 },
+            { "orderable": false, "targets": 4 },
+            { "orderable": false, "targets": 5 },
+            { "orderable": false, "targets": 6 },
+            { "orderable": false, "targets": 7 },
+            { "orderable": false, "targets": 8 },
+            { "orderable": false, "targets": 9 },
+            { "orderable": false, "targets": 10 },
+            { "orderable": false, "targets": 11 },
+			{ "orderable": false, "targets": 12 },			
+			{ "orderable": false, "targets": 13 },
+			// {targets: [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], searchable: false}
+
+        ],        
+		// dom: '<"toolbar">Blfrtrip',//'Blfrtrip'
+		dom: 'Bl<"toolbar">frtip',
+		buttons: [
+			{
+				text: 'Reload',
+				className: ' glyphicon glyphicon-repeat btn btn-primary ',				
+				action: function ( e, dt, node, config ) {
+					newEntry = false
+					addTimes = 0
+					dt.ajax.reload();
+				}			
+			},
+			{
+				text: 'New',
+				className: 'glyphicon glyphicon-plus btn btn-success add-new',	
+				"serverSide": false,		
+				action: function( e, dt, node, config ) {					
+					// dt.columns().visible(true);
+					// dataTable.columns([0]).visible(false);					
+					// dt.row.add( [
+					// 	'',			
+					// '<td contenteditable id="book"  style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
+					// '<td><a href="#" name="insert" id="insert" style="width:100% padding:0, margin:0">+
+					// 		<span class="glyphicon glyphicon-save text-primary"></span></a>'
+					// 	'<a href="#" name="delete" id="delete" style="width:100% padding:0, margin:0">+
+					// 		<span class="glyphicon glyphicon-trash text-danger"></span></a></td>'
+					
+					// '','','','','','','','','','','','','',''
+					// ],
+					// dt.draw());
+					// dt.order([1, 'asc'])).draw();
+					newEntry = true
+					addTimes += 1
+					dataTable.draw()
+					
+					//
+					if (addTimes == 5) {						
+						dataTable.buttons( '.add-new' ).disable();
+					} else {
+						dataTable.buttons( '.add-new' ).enable();
+					}
+				},				
+			},
+			// { text: 'Servers', 
+			// action: function ( e, dt, node, config ) {
+			// 		newEntry = true
+			// 		dataTable.draw()	
+			// 	}
+			// },
+			
+		{
+			extend: 'colvis',
+			columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13],
+			titleAttr: 'Columns can be hidden or shown by toggling them here.',
+			text: '<span>Columns visibility</span>',
+			className: 'btn btn-outline-info',
+			columnText: function(dt, idx, title) {			
+				$("#sample_data").attr('width', '100%');
+				return '<a class="btn-visibility" style="display:flex">'+idx+': '+title+'</a>';
+			},
+			autoClose: true,
+			fade: true
+
+		},
+															
+		],
+		stateSave: true,
+		colReorder: true,
+		
+		keys: true,
+		// "scrollY": auto,		
+	});
+	
+	
+	// custom response message
+	// $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+	// custome reposnse message
+	// hover select row and cols
+	var lastIdx = null;    
+     
+	// $('#sample_data tbody').on( 'mouseover', 'td', function () {
+    //         var colIdx = dataTable.cell(this).index().column;
+		
+    //         if ( colIdx !== lastIdx ) {
+    //             $( dataTable.cells().nodes() ).removeClass( 'highlight' );
+    //             $( dataTable.column( colIdx ).nodes() ).addClass( 'highlight' );
+    //         }
+    //     } ).on( 'mouseleave', function () {
+    //         $( dataTable.cells().nodes() ).removeClass( 'highlight' );
+    //     } );	
+
+	// hover select row and cols
+	$('.show_all').on('click', function	(e) {
+		e.preventDefault();
+		dataTable.columns().visible( true, true );
+		dataTable.columns.adjust().draw( false );
+		dataTable.columns([0]).visible(false);
+		$("#sample_data").attr('width', '100%')
+	});	
+
+	// $('.add_data').on('click', function(e){
+	// 	dataTable.row.add( [					
+	// 				'','','','','','','','','','','','',''             
+	// 				])
+	// 	dataTable.draw()
+	// 	// dataTable.order([1, 'asc']) ).draw();
+	// });
+	// toggle cols
+
+	$('a.toggle-vis').on( 'click', function (e) {
+        e.preventDefault();
+		newEntry = false;
+		addTimes = 0;
+        // Get the column API object
+		var column = dataTable.column( $(this).attr('data-column') );
+
+		// if show all clicked
+		// if (column.selector.cols == 14) {
+		// 	dataTable.columns().visible(true);
+		// } else {
+		// 	column.visible( ! column.visible() );	
+		// }
+		// console.log(column.selector.cols)
+		// console.log(column)
+		// Toggle the visibility
+		column.visible( ! column.visible() );	
+        $("#sample_data").attr('width', '100%')
+	} );
+
+	// toggle cols
+
+	// $('#sample_data tbody').on('click', 'tr', function () {
+	// 	// var data = dataTable.row( this ).data();
+	// 	// $(this).toggleClass('selected');
+    //     // alert( 'You clicked on '+data[0]+'\'s row' );
+    // } );
+	// dataTable.buttons().container()
+    //     .appendTo( '#sample_data .small-6.columns:eq(0)' );
+	// inline edit
+	$.fn.editable.defaults.mode = 'inline';
+	
+	// tab based edit tabindex using jquery
+	// $('#sample_data tbody').click(function(e){
+	// $('#sample_data tbody').focus();
+	// });
+	var currentNode;
+	$('#sample_data tbody').keypress(function(e){
+		// console.log(e.currentTarget.innerHTML);			
+		newEntry = false;
+		addTimes = 0;
+		if (e.which == 13) {
+			currentNode = e.target;
+			// console.log((e.target))				
+			if (e.target.type == 'submit') {				
+				// console.log(e.target.type == 'submit')
+			} else {
+				$(e.target).click();
+			}
+			
+		}
+		var tempd = e.target
+		var cn = e.target.className			
+		// e.preventDefault(); // Stop the default behaviour        		
+		// $(e.target).editable('toggle');			
+	});
+
+
+	// arrows key navigation
+	
+	// arrows key navigation
+
+	// $('#sample_data tbody').on('click', 'tr', function () {
+    //     var data = dataTable.row( this ).data();
+	// 	// alert( 'You clicked on '+data[0]+'\'s row' );		
+		
+	// } );
+	
+	// add row
+    $('addNew').on( 'click', function () {
+		console.log('clicked');
+		var html = '<tr>';
+		html += '<td contenteditable id="book_name"  style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
+		html += '<td><a href="#" name="insert" id="insert" style="width:100% padding:0, margin:0"> <span class="glyphicon glyphicon-save text-primary"></span></a>';
+		html += '<a href="#" name="delete" id="delete" style="width:100% padding:0, margin:0"> <span class="glyphicon glyphicon-trash text-primary"></span></a></td>';
+		html += '</tr>';
+		$('#sample_data tbody').prepend(html);
+	
+	});
+	$(document).on('click', '#insert', function(){
+		var id = "";
+		var bookName = $('#book_name').text();
+	});
+	// add row
+	// EXTRA OPTIONS ARE AVAILABLE
+	//http://vitalets.github.io/x-editable/assets/demo.js
+	
+	$('#sample_data').editable({		
+		container:'book',
+		selector:'td.book',		
+		url:'http://127.0.0.1:5000/api/',				
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},		
+		validate:function(value){
+			if($.trim(value) == '')
+			{
+				return 'This field is required';
+			}
+		},
+		success: function(response, newValue) {			
+			console.log(response, newValue)
+			// var current_pk = $(this).data('pk');
+			// console.log(current_pk)
+			// $(this).data('pk', response['id'])
+			// $(this).data('book', response['success'])
+			// console.log($(this).data('pk'))			
+			newEntry = true;
+			addTimes -= 1;
+			dataTable.ajax.reload();			
+			return 'saved'
+		},
+		error: function(response, newValue) {       
+			newEntry = false;
+			addTimes = 0;
+
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+				
+	});
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.col_1',		
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}	
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.col_2',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}	
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.author',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}	
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.worked_on',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.lib',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});	
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.cap',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});	
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.par',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});	
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.pag',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});	
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.line',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.genre',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});
+	
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.origin_place',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});
+
+	$('#sample_data').editable({
+		container:'body',
+		selector:'td.origin_time',
+		url:'http://127.0.0.1:5000/api/',	
+		ajaxOptions: {
+			type: 'post',
+    		dataType: 'json'
+		},
+		error: function(response, newValue) {            
+			if(response.status === 500) {
+				return 'Service unavailable. Please try later.';
+			} else {   
+				var error = $.parseHTML( response.responseText )
+				return 'Sorry, '+error      
+			}
+		}
+	});
+
+
+$('.alert').alert()
+function message_show(status, message, operation) {
+	$("div.toolbar").delay(1).fadeIn();	
+	var res=''
+	if (status == 'Success') {
+		res += '<div id ="res" class="alert alert-success alert-dismissible fade show" role="alert">'
+		res += '<strong>'+status+'!</strong> on '+operation+' of<b>'
+	} else {
+		res += '<div id ="res" class="alert alert-danger alert-dismissible fade show" role="alert">'
+		res += '<strong>'+status+'!</strong> on '+operation+' of<b>'
+	}
+	res += message+' & ...<b><button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+	res += ' <span aria-hidden="true">&times;</span>  </button> </div>'
+
+	$("div.toolbar").html(res);
+	$("div.toolbar").delay(5000).fadeOut(300);			
+}
+// Delete record
+// https://makitweb.com/edit-delete-datatables-record-with-ajax-and-php/
+$('#sample_data tbody').on('click', '.delete', function () {
+	var rowId = $(this).attr("id").match(/\d+/)[0];
+  	var data = dataTable.row(rowId).data();
+	console.log(data, rowId)	
+	if (data === undefined || (data[0] == "") ) {			
+		addTimes -= 1
+		dataTable.row( $(this).parents('tr') ).remove().draw();
+		if (addTimes < 5) {
+			dataTable.buttons( '.add-new' ).enable();
+		}
+	}else {
+		// dataTable.row( $(this).parents('tr') ).remove().draw();
+		if(confirm("Are you sure you want to remove this?")) {
+			$.ajax({
+				url: "http://127.0.0.1:5000/api/"+data[0],
+				type: "DELETE",			
+				success: function(response) {
+					
+					// $('div.toolbar').css('z-index', '-1'); 
+					// var res = '<b id="res" class="text-success">Success! successfully deleted.</b>'
+					// var res = '<div id ="res" class="alert alert-success alert-dismissible fade show" role="alert">'
+					// 	res += '<strong>Success!</strong> on deletion of <b>'+data[1]+' '+ data[2]+' & ...<b><button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+					// 	res += ' <span aria-hidden="true">&times;</span>  </button> </div>'
+					// $("div.toolbar").html(res);
+					// $("div.toolbar").delay(5000).fadeOut(300);						
+					var status = "Success"					
+					var message = data[1]+' '+ data[2]
+					var operation = "delete"
+					message_show(status, message, operation)				
+					console.log("Successfully deleted")
+					console.log(response)					
+					addTimes -= 1
+					dataTable.ajax.reload();					
+				},
+				error: function(response, newValue) {           
+					console.log(response.status, newValue) 
+					if(response.status === 500) {						
+						return 'Service unavailable. Please try later.';
+					} else {
+						var error = $.parseHTML( response.responseText )
+						return 'Sorry !, '+error;
+						// $(".editable-error-block").html(error)
+					}
+				}
+			})
+		}
+	}
+});
+
+
+});	
+//https://www.youtube.com/watch?v=Xhl6UC3nsnE&ab_channel=Webslesson
+
+
+</script>
+
+
+</body>
+</html>

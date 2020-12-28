@@ -1,0 +1,5 @@
+LIB: BOOK or library
+CAP: Chapter
+PAR: Paragraph
+PAG: Page
+LIN: Line
