@@ -234,7 +234,7 @@ div.dt-button-background {
     position: fixed !important;
     width: 25% !important;
     text-align: center !important;
-    margin-left: 33% !important;
+    margin-left: 36% !important;
 }
 .toolbar b {
     margin-left: 1em;
@@ -270,4 +270,37 @@ label {
 .alert-dismissable .close, .alert-dismissible .close {    
     top: 0px !important;
     right: 0px !important;    
+}
+
+/* new desing position of search and filter*/
+.dataTables_filter {
+    /* float: right !important; */
+    margin-right: 1em !important;
+}
+
+.form-control .form-control-sm {
+    width: 15em !important;
+}
+
+.dataTables_length {
+    float: right !important;
+}
+
+/* book of */
+.book_of {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    margin-bottom: 5px !important;    
+    margin-left: 4px !important;
+    line-height: 2.5 !important;   
+}
+
+div.book_of > label {    
+    width: 7em !important;    
+    /* font-weight: normal !important; */
+}
+
+/* hide column */
+.hidetd {
+    display: none !important;
 }

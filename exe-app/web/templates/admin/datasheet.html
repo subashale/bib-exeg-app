@@ -21,7 +21,6 @@
 		<!-- <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script> -->
 		<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.colVis.min.js"></script>
 
-
 		<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">		
 				
@@ -36,25 +35,6 @@
 				<div class="panel-heading">Sample Data</div>
 				<div class="panel-body">		
 					<div class="table-responsive">
-						<!-- <a href="#" class="btn add_data">Add row</a>		 -->
-						<!-- <div>
-							Toggle column: 							
-							<a class="toggle-vis" data-column="1">Book</a>
-							- <a class="toggle-vis" data-column="2">Col 1</a>
-							- <a class="toggle-vis" data-column="3">Col 2</a> 
-							- <a class="toggle-vis" data-column="4">Author</a> 
-							- <a class="toggle-vis" data-column="5">Worked on</a> 
-							- <a class="toggle-vis" data-column="6">Lib</a>
-							- <a class="toggle-vis" data-column="7">Cap</a>
-							- <a class="toggle-vis" data-column="8">Par</a> 
-							- <a class="toggle-vis" data-column="9">Pag</a> 
-							- <a class="toggle-vis" data-column="10">Lin</a> 
-							- <a class="toggle-vis" data-column="11">Genre</a>
-							- <a class="toggle-vis" data-column="12">Origin Place</a>
-							- <a class="toggle-vis" data-column="13">Origin Time</a>
-							- <a class="toggle-vis" data-column="14">Del</a>
-							- <a class="show_all">Show All</a>
-						</div>											 -->						
 						<table id="sample_data" class="table table-bordered table-striped row-border hover order-column display" style="min-width: 864px;">						
 							<thead>
 								<tr>
@@ -118,13 +98,14 @@ $(document).ready(function(){
 		"LenthChange" : true,
 		"pageLength": 5,
 		"pagingType": "full_numbers",
-		"paging": true,
+		"paging": true,		
 		"ajax":{
 			url: "http://127.0.0.1:5000/api/",
 			type: "GET",
 			"data": function ( d ) {
 				d.new_entry = newEntry
 				d.add_times = addTimes
+				d.book_name = bookIs
                 // d.custom = $('#myInput').val();
                 // etc
             }
@@ -136,7 +117,7 @@ $(document).ready(function(){
         //                     return nRow;
         //                 },		
 		createdRow:function(row, data, rowIndex){
-            $.each($('td', row), function(colIndex){				
+            $.each($('td', row), function(colIndex){					
 				if(colIndex == 0)
 				{
 					$(this).attr('data-name', 'book');
@@ -276,7 +257,7 @@ $(document).ready(function(){
 
         ],        
 		// dom: '<"toolbar">Blfrtrip',//'Blfrtrip'
-		dom: 'Bl<"toolbar">frtip',
+		dom: 'Bl<"toolbar"><"book_of">frtip',
 		buttons: [
 			{
 				text: 'Reload',
@@ -284,50 +265,51 @@ $(document).ready(function(){
 				action: function ( e, dt, node, config ) {
 					newEntry = false
 					addTimes = 0
-					dt.ajax.reload();
+					
+					dataTable.buttons( '.add-new' ).enable();
+					
+					
+					
 				}			
 			},
 			{
 				text: 'New',
-				className: 'glyphicon glyphicon-plus btn btn-success add-new',	
-				"serverSide": false,		
+				className: 'glyphicon glyphicon-plus btn btn-success add-new',						
 				action: function( e, dt, node, config ) {					
-					// dt.columns().visible(true);
-					// dataTable.columns([0]).visible(false);					
-					// dt.row.add( [
-					// 	'',			
-					// '<td contenteditable id="book"  style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td contenteditable id="data1" style="background-color:#fff;"></td>',
-					// '<td><a href="#" name="insert" id="insert" style="width:100% padding:0, margin:0">+
-					// 		<span class="glyphicon glyphicon-save text-primary"></span></a>'
-					// 	'<a href="#" name="delete" id="delete" style="width:100% padding:0, margin:0">+
-					// 		<span class="glyphicon glyphicon-trash text-danger"></span></a></td>'
-					
-					// '','','','','','','','','','','','','',''
-					// ],
-					// dt.draw());
-					// dt.order([1, 'asc'])).draw();
+		
 					newEntry = true
 					addTimes += 1
-					dataTable.draw()
-					
+					// dt.row.add( [
+					// '', '', '', '', '', '', '', '', '', '', '', '', '',''
+					// ],
+					// dt.draw());
+					dataTable.columns([2,3,4,5,6,7,8,9,10,11,12,13]).visible(true);
+					// dataTable.draw()
+
 					//
 					if (addTimes == 5) {						
 						dataTable.buttons( '.add-new' ).disable();
 					} else {
 						dataTable.buttons( '.add-new' ).enable();
 					}
+					
+					if (bookIs === "" || bookIs == undefined){		
+						console.log("checked")	
+						$('#sample_data thead tr th:first-child').removeClass('hidetd');
+						$('#sample_data tbody tr td:first-child').removeClass('hidetd');			
+						$('#sample_data tfoot tr th:first-child').removeClass('hidetd');
+						dataTable.ajax.reload();
+						
+					} else {
+						console.log(bookIs)
+						console.log($('#sample_data tbody tr td:first-child').text())						
+						$('#sample_data thead tr th:first-child').addClass('hidetd');
+						$('#sample_data tbody tr td:first-child').addClass('hidetd');			
+						$('#sample_data tfoot tr th:first-child').addClass('hidetd');
+						dataTable.ajax.reload();
+						
+					}
+					
 				},				
 			},
 			// { text: 'Servers', 
@@ -339,20 +321,26 @@ $(document).ready(function(){
 			
 		{
 			extend: 'colvis',
-			columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13],
+			columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13],
 			titleAttr: 'Columns can be hidden or shown by toggling them here.',
 			text: '<span>Columns visibility</span>',
 			className: 'btn btn-outline-info',
 			columnText: function(dt, idx, title) {			
 				$("#sample_data").attr('width', '100%');
+				
 				return '<a class="btn-visibility" style="display:flex">'+idx+': '+title+'</a>';
 			},
+			
 			autoClose: true,
 			fade: true
 
-		},
+		},		
 															
 		],
+		select: {
+            style: 'os',
+            items: 'cell'
+		},		
 		stateSave: true,
 		colReorder: true,
 		
@@ -360,9 +348,121 @@ $(document).ready(function(){
 		// "scrollY": auto,		
 	});
 	
+	// $('#sample_data').on( 'column-visibility.dt', function ( e, settings, column, state ) {
+	// 	console.log(dataTable.column(column).visible())
+	// 	console.log(
+	// 		'Column '+ column +' has changed to '+ (state ? 'visible' : 'hidden')
+	// 	);
+	// } );
 	
 	// custom response message
 	// $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+	// var bookOf = '<div class="form-inline" style="width:6em"><div class="form-group mb-5">'
+    // bookOf += '<label class="sr-only">Book of: </label>'
+    // bookOf += '<select class="form-control" id="sel1">'
+    // bookOf += '<option>1</option>'
+	// bookOf += '</select> </div></div>'
+
+	// book selection	
+	var bookIs = $("#book_name").children("option:selected").val();
+	var bookOf ='<label>Book of</label>'
+	bookOf += '<select name="book_name" id="book_name" class="form-control">'
+	bookOf +='<option value="" selected>All</option><option data-column="1" value="ES">ES</option><option value="DEMO">DEMO</option>'
+	bookOf +='</select>'			
+
+	$("div.book_of").html(bookOf);	
+	
+	var column = dataTable.column(1);		
+	column.visible(true);
+		
+	$("#book_name").change(function(e){
+        bookIs = $(this).children("option:selected").val();
+		// console.log($(this).attr('data-column'))
+		// var column = dataTable.column( $(this).attr('data-column'));		
+		// column.visible( true );
+		// dataTable.columns([0]).visible(false)		
+		e.preventDefault();
+		
+        // // Get the column API object
+		// // var column = dataTable.column(1);		
+		// isTrue = column.visible()
+		// // if (bookIs === "") {
+		// // 	column.visible(true);
+
+		// // 	dataTable.draw();
+		// // } else 
+		// console.log(bookIs, column.visible())
+		addTimes = 0
+		// if (bookIs ==""){			
+		// 	// column.visible( false);			
+		// 	$('#sample_data').DataTable().column(1).visible(true);
+		// } else {
+		// 	// column.visible( true );
+		// 	$('#sample_data').DataTable().column(1).visible(false);
+		// }
+        // // Toggle the visibility
+		// // column.visible( ! column.visible() );
+		// // dataTable.columns([0]).visible(false);
+		dataTable.buttons( '.add-new' ).enable();
+		
+		
+		// dataTable.rows().invalidate().draw();
+		
+		
+
+		// if (column.visible()) {
+        // column.visible(false);
+        // $(this).addClass('hidden');
+		// } else {
+		// 	column.visible(true);
+		// 	$(this).removeClass('hidden');
+		// }
+		// dataTable.draw();
+		if (bookIs === ""){		
+			console.log("ca")				
+			dataTable.on( 'draw', function () {
+				$('thead tr th:first-child').removeClass('hidetd');
+				$('tbody tr td:nth-child(1)').each(function (){
+					$(this).removeClass('hidetd')
+				})
+				$('tfoot tr th:nth-child(1)').removeClass('hidetd');
+			});
+			dataTable.ajax.reload();
+			// $('#sample_data thead tr th:first-child').removeClass('hidetd');
+						
+			// $('#sample_data tbody tr td:first-child').removeClass('hidetd');
+			// $('#sample_data tfoot tr th:first-child').removeClass('hidetd');
+			// $('#sample_data').DataTable().column(1).visible(true);			
+			// column.visible( true );	
+			// column.removeClass('hidden');	
+			
+		} else {
+			console.log(bookIs)			
+			// dataTable.ajax.reload();
+			// dataTable.draw();					
+			// $('#sample_data tbody tr td:first-child').addClass('hidetd');
+			dataTable.on( 'draw', function () {				
+				$('#sample_data thead tr th:first-child').addClass('hidetd');	
+				$('tbody tr td:nth-child(1)').each(function (){
+					$(this).addClass('hidetd')
+				})
+				$('#sample_data tfoot tr th:first-child').addClass('hidetd');
+			});
+			dataTable.ajax.reload();
+		}
+			// $('#sample_data tfoot tr th:first-child').addClass('hidetd');
+			// $('td.hidetd').removeClass('hidetd')
+			// $('#sample_data').DataTable().column(1).visible(false);			
+		// 	$('td.hidetd').css('display', 'hidden')
+		// 	// column.removeClass('hidden');
+			
+					
+	});
+	
+	
+	
+	// book selection
+	
 	// custome reposnse message
 	// hover select row and cols
 	var lastIdx = null;    
@@ -401,19 +501,16 @@ $(document).ready(function(){
 		newEntry = false;
 		addTimes = 0;
         // Get the column API object
-		var column = dataTable.column( $(this).attr('data-column') );
-
-		// if show all clicked
-		// if (column.selector.cols == 14) {
-		// 	dataTable.columns().visible(true);
-		// } else {
-		// 	column.visible( ! column.visible() );	
-		// }
-		// console.log(column.selector.cols)
-		// console.log(column)
-		// Toggle the visibility
-		column.visible( ! column.visible() );	
-        $("#sample_data").attr('width', '100%')
+		var column = dataTable.column( $(this).attr('data-column') );		
+		
+		console.log(column)
+		if (column.visible()) {
+        	// column.visible(false);
+        	$(this).addClass('hidetd');
+		} else {
+			// column.visible(true);
+			$(this).removeClass('hidetd');
+		}
 	} );
 
 	// toggle cols
@@ -465,33 +562,8 @@ $(document).ready(function(){
 	// } );
 	
 	// add row
-    $('addNew').on( 'click', function () {
-		console.log('clicked');
-		var html = '<tr>';
-		html += '<td contenteditable id="book_name"  style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td contenteditable id="data1" style="background-color:#fff;"></td>';
-		html += '<td><a href="#" name="insert" id="insert" style="width:100% padding:0, margin:0"> <span class="glyphicon glyphicon-save text-primary"></span></a>';
-		html += '<a href="#" name="delete" id="delete" style="width:100% padding:0, margin:0"> <span class="glyphicon glyphicon-trash text-primary"></span></a></td>';
-		html += '</tr>';
-		$('#sample_data tbody').prepend(html);
-	
-	});
-	$(document).on('click', '#insert', function(){
-		var id = "";
-		var bookName = $('#book_name').text();
-	});
-	// add row
+
+
 	// EXTRA OPTIONS ARE AVAILABLE
 	//http://vitalets.github.io/x-editable/assets/demo.js
 	
@@ -502,6 +574,11 @@ $(document).ready(function(){
 		ajaxOptions: {
 			type: 'post',
     		dataType: 'json'
+		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
 		},		
 		validate:function(value){
 			if($.trim(value) == '')
@@ -518,7 +595,7 @@ $(document).ready(function(){
 			// console.log($(this).data('pk'))			
 			newEntry = true;
 			addTimes -= 1;
-			dataTable.ajax.reload();			
+			dataTable.ajax.reload();				
 			return 'saved'
 		},
 		error: function(response, newValue) {       
@@ -543,6 +620,14 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
+		success: function(response, newValue) {			
+			console.log($("#book_name").children("option:selected").val()) 
+		},
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -561,6 +646,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -579,6 +669,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -597,6 +692,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -615,6 +715,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -633,6 +738,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -651,6 +761,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -669,6 +784,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -687,6 +807,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -705,6 +830,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -723,6 +853,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -741,6 +876,11 @@ $(document).ready(function(){
 			type: 'post',
     		dataType: 'json'
 		},
+		params: function(params) {
+			//originally params contain pk, name and value
+			params.book_name = $("#book_name").children("option:selected").val();
+			return params;
+		},		
 		error: function(response, newValue) {            
 			if(response.status === 500) {
 				return 'Service unavailable. Please try later.';
@@ -767,7 +907,7 @@ function message_show(status, message, operation) {
 	res += ' <span aria-hidden="true">&times;</span>  </button> </div>'
 
 	$("div.toolbar").html(res);
-	$("div.toolbar").delay(5000).fadeOut(300);			
+	$("div.toolbar").delay(5000).fadeOut(300);	
 }
 // Delete record
 // https://makitweb.com/edit-delete-datatables-record-with-ajax-and-php/

@@ -22,24 +22,34 @@ COL_LIST = ["id", "book", "col_1", "col_2", "author", "work", "lib", "cap", "par
 def add_product():
     id = str(request.form['pk'])
     field = request.form['name']
-    value = request.form['value']    
-    # result = db.engine.execute('select * from abbrivations')#.execution_options(autocommit=True))     
+    value = request.form['value']
+    bookName = request.form["book_name"]
+    # result = db.engine.execute('select * from abbrivations')#.execution_options(autocommit=True))
+    print(bookName)
     
     if id == '':        
         # new insertion
-        if field == 'book':        
+        if field == 'book': 
             query = "insert into book ({}, updated_on, is_active) values ('{}', '{}', 1)".format(field, value, datetime.utcnow())
         else:
-            query = "insert into book ({}, {}, updated_on, is_active) values ('{}','{}', '{}', 1)".format("book",  field, "No book", value, datetime.utcnow())
-        
+            if bookName == None or bookName == '':
+                query = "insert into book ({}, {}, updated_on, is_active) values ('{}','{}', '{}', 1)".format("book",  field, "No book", value, datetime.utcnow())
+            else:                
+                query = "insert into book (book, {}, updated_on, is_active) values ('{}','{}', '{}', 1)".format(field, bookName, value, datetime.utcnow())
+                print("auto book select",query)
+        print(query)
         insert = db.engine.execute(query)
         db.session.commit()
         
         return {"id": insert.lastrowid, "success": True}
     else:
         # updating 
-        query = "update book set {}='{}', updated_on='{}' where id = {}".format(field, value, datetime.utcnow(), id)
+        if bookName == None or bookName == '':
+            query = "update book set {}='{}', updated_on='{}' where id = {}".format(field, value, datetime.utcnow(), id)
+        else:
+            query = "update book set {}='{}', updated_on='{}' where id = {}".format(field, value, datetime.utcnow(), id)
 
+        print(query)
         db.engine.execute(query)
         db.session.commit()        
         
@@ -67,14 +77,18 @@ def add_product():
 @api.route('/', methods=['GET'])
 def get_products():
     query = "select id, book, col_1, col_2, author, work, lib, cap, par, pag, line, genre, origin_place, origin_time from book "    
+
+    bookName = request.args.get("book_name")
+
+    print("book is:", bookName)
     searchOn = str(request.args.get("search[value]"))
     start = request.args.get("start")
     length = request.args.get("length")
     draw = int(request.args.get("draw"))
-
+    
     if (searchOn):
-        query += "WHERE (book LIKE '%"+searchOn+"%' OR "
-        query += "col_1 LIKE '%"+searchOn+"%' OR "
+        # query += "WHERE (book LIKE '%"+searchOn+"%' OR "
+        query += "WHERE (col_1 LIKE '%"+searchOn+"%' OR "
         query += "col_2 LIKE '%"+searchOn+"%' OR "
         query += "author LIKE '%"+searchOn+"%' OR "
         query += "work LIKE '%"+searchOn+"%' OR "
@@ -85,14 +99,26 @@ def get_products():
         query += "line LIKE '%"+searchOn+"%' OR "
         query += "genre LIKE '%"+searchOn+"%' OR "
         query += "origin_place LIKE '%"+searchOn+"%' OR "
-        query += "origin_time LIKE '%"+searchOn+"%') AND "
-        query += "is_active=1 "
+        query += "origin_time LIKE '%"+searchOn+"%' "
+        if bookName == None or bookName == '':
+            query += "OR book LIKE '%"+searchOn+"%') AND "
+            query += "is_active=1 "
+        else:
+            query += ") AND (book='"+bookName+ "' AND is_active=1) "
     else:
-        query += "WHERE is_active=1 "
+        if bookName == None or bookName == '':
+            # print("q", query)
+            query += "WHERE is_active=1 "
+        else:
+            query += "WHERE book='"+bookName+ "' AND is_active=1 "
+
     # COL_LIST
     orderDir = request.args.get("order[0][dir]")
     columnIdx = request.args.get("order[0][column]")
-
+    print("order id", columnIdx, orderDir)
+    if columnIdx == None:
+        columnIdx = 14
+        orderDir = "desc"
     query += "order by "+COL_LIST[int(columnIdx)]+" "+orderDir+ " "
 
     query1 = ''
@@ -102,7 +128,8 @@ def get_products():
     statement = db.engine.execute(query)    
     
     number_filter_row = len(list(statement))
-        
+    
+    # totalBookQuery = "SELECT count(id) FROM book where is_active=1 AND book='"+bookName+"'"
     total = db.engine.execute("SELECT count(id) FROM book where is_active=1")
     
     results = db.engine.execute(query+query1)
@@ -113,8 +140,12 @@ def get_products():
             "data": [], }
     
     addTimes = int(request.args.get("add_times"))
-    if addTimes > 0:        
-        newData = ['']*14
+    if addTimes > 0:
+        if bookName == None or bookName == '':
+            newData = ['']*14
+        else:
+            newData = ['', bookName, '', '', '', '', '', '', '', '', '', '', '', '']
+            
         if addTimes > 5:
             addTimes = 5        
         data["data"] = [newData]*addTimes
